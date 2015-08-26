@@ -89,6 +89,7 @@ function include () {
 		if [ -z "$3" ]; then
 			warn "Include file $1 was skipped (not a file)"
 		fi
+		return -1
 	fi
 }
 
