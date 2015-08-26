@@ -90,7 +90,6 @@ function include () {
 }
 
 # Cache uname output for potential use
-CMD_UNAME="/bin/uname"
-UNAME_S=$(${CMD_UNAME} -s)
+UNAME_S=$(/usr/bin/env uname -s)
 
 debug "Done with environmental setup."
