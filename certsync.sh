@@ -33,12 +33,26 @@
 
 # Load setup helper variables and functions
 source "$(dirname $0)/helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
+_CONFIG_FILE="${HOME}/.config/certsync.config"
 
 function load_config () {
-    include $1 "certsync configuration file" -nowarn
+    include $1 "certsync configuration file" -nowarn && _CONFIG_LOADED=true
     CMD_OPENSSL=${CMD_OPENSSL:-$(which openssl)}
     CMD_CERTTOOL=${CMD_CERTTOOL:-$(which certtool)}
     CMD_CERTUTIL=${CMD_CERTUTIL:-$(which certutil)}
+}
+
+function show_config () {
+    local _header="Configuration"
+    if [ -z "${_CONFIG_LOADED}" ]; then
+        _header="${_header} (defaults):"
+    else
+        _header="${_header} (including config file ${_CONFIG_FILE}):"
+    fi
+    note "${_header}"
+    note "  CMD_OPENSSL  :: ${CMD_OPENSSL}"
+    note "  CMD_CERTTOOL :: ${CMD_CERTTOOL}"
+    note "  CMD_CERTUTIL :: ${CMD_CERTUTIL}"
 }
 
 function verify_config () {
@@ -61,5 +75,6 @@ function verify_config () {
     debug "_ERRORS=${_ERRORS}"
 }
 
-load_config "${HOME}/.config/certsync.config"
+load_config _CONFIG_FILE
+show_config
 verify_config
