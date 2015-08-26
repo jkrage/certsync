@@ -85,7 +85,10 @@ function include () {
 		debug "Sourcing ${2:-content} from $1"
 		source "$1"
 	else
-		warn "Include file $1 was skipped (not a file)"
+		# Any 3rd argument suppresses the warning
+		if [ -z "$3" ]; then
+			warn "Include file $1 was skipped (not a file)"
+		fi
 	fi
 }
 
