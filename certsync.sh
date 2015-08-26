@@ -33,3 +33,33 @@
 
 # Load setup helper variables and functions
 source "$(dirname $0)/helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
+
+function load_config () {
+    include $1
+    CMD_OPENSSL=${CMD_OPENSSL:-$(which openssl)}
+    CMD_CERTTOOL=${CMD_CERTTOOL:-$(which certtool)}
+    CMD_CERTUTIL=${CMD_CERTUTIL:-$(which certutil)}
+}
+
+function verify_config () {
+    local _ERRORS=0
+    if [ ! -x "${CMD_OPENSSL}" ]; then
+        warn "The openssl command was not found, please set CMD_OPENSSL."
+        _ERRORS=$((++_ERRORS))
+    fi
+    if [ ! -x "${CMD_CERTTOOL}" ]; then
+        warn "The Apple/OSX certtool command was not found, please set CMD_CERTTOOL."
+        _ERRORS=$((++_ERRORS))
+    fi
+    if [ ! -x "${CMD_CERTUTIL}" ]; then
+        warn "The Mozilla/NSS certutil command was not found, please set CMD_CERTUTIL."
+        _ERRORS=$((++_ERRORS))
+    fi
+    if [[ ${_ERRORS} -gt 0 ]]; then
+        error "Critical commands were not found, aborting."
+    fi
+    debug "_ERRORS=${_ERRORS}"
+}
+
+load_config "${HOME}/.config/certsync.config"
+verify_config
