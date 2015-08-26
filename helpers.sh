@@ -98,5 +98,3 @@ UNAME_S=$(/usr/bin/env uname -s)
 
 # Cache our origin directory
 export _DIR_ORIGIN=$(get_absolute_path ${BASH_SOURCE})
-
-debug "Done with environmental setup from ${_DIR_ORIGIN}."

@@ -50,6 +50,7 @@ function show_config () {
         _header="${_header} (including config file ${_CONFIG_FILE}):"
     fi
     note "${_header}"
+    debug "certsync script directory is ${_DIR_ORIGIN}."
     note "  CMD_OPENSSL  :: ${CMD_OPENSSL}"
     note "  CMD_CERTTOOL :: ${CMD_CERTTOOL}"
     note "  CMD_CERTUTIL :: ${CMD_CERTUTIL}"
