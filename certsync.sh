@@ -9,7 +9,6 @@
 # IMPLEMENTATION:
 # Provide the ability to manually identify a list of certificate queries
 # or certificate files and load those into the appropriate keystores.
-
 # Pseudo-code:
 # Identify output OSX_KEYCHAIN
 # Identify output MOZILLA_PROFILE location
@@ -31,3 +30,6 @@
 #     certtool i STAGING_FILE k=KEYCHAIN_FILE
 #   - Store CERT in FILE_NICKNAME using DEFAULT_FORMAT
 # Report status
+
+# Load setup helper variables and functions
+source "$(dirname $0)/helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
