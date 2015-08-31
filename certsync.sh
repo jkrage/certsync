@@ -76,6 +76,6 @@ function verify_config () {
     debug "_ERRORS=${_ERRORS}"
 }
 
-load_config _CONFIG_FILE
+load_config "${_CONFIG_FILE}"
 show_config
 verify_config
