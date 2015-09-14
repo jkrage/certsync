@@ -2,6 +2,9 @@
 ###
 ### helpers.sh -- Convenience functions and setup
 ###
+### Included by other scripts, such as through:
+### source "$(dirname $0)/helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
+
 #
 # Internal Variables
 #
