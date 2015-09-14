@@ -3,7 +3,9 @@
 ### test_helpers.sh -- Tests for convenience functions and setup
 
 # Load the helpers.sh file
-source "$(dirname $0)/../helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
+source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
+# Enforce being in the tests directory
+[[ "$(dirname $0)" == "." ]] || { echo "ERROR: Please run this script directly from the tests/ directory." ; exit 1 ; }
 
 ### Master wrapper function for Testing
 function test_wrapper () {
