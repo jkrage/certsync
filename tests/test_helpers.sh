@@ -21,6 +21,7 @@ function test_helpers_include () {
     if [ -z "${__TEST_HELPERS_INCLUDE_FUNCTION}" ]; then
         return_value=1
     fi
+    unset __TEST_HELPERS_INCLUDE_FUNCTION
     return ${return_value}
 }
 
