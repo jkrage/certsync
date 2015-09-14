@@ -23,7 +23,7 @@ function test_helpers_include () {
     else
         return_value=1
     fi
-    return ${retval}
+    return ${return_value}
 }
 
 test_wrapper "function include()" test_helpers_include
