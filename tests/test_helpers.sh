@@ -7,8 +7,8 @@ source "$(dirname $0)/../helpers.sh" || (echo "ERROR: helpers.sh not found!" ;ex
 
 ### Master wrapper function for Testing
 function test_wrapper () {
-    TEST_LABEL=$1
-    TEST_FUNCTION=$2
+    local TEST_LABEL=$1
+    local TEST_FUNCTION=$2
     debug "Testing: ${TEST_LABEL}"
     ${TEST_FUNCTION} >/dev/null 2>&1 && note "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
 }
