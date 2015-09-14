@@ -32,4 +32,71 @@ function test_helpers_include () {
     return ${return_value}
 }
 
+
+function test_get_absolute_path_01 () {
+    # Test file
+    local return_value=0
+    local _PWD=${PWD}
+    local TEST_VALUE
+    local TEST_FILE="test_helpers.sh"
+
+    TEST_VALUE=$(get_absolute_path ${TEST_FILE})
+    note "${TEST_FILE} -> ${TEST_VALUE}"
+    if [ "${TEST_VALUE}" != "${_PWD}" ]; then
+        warn "Value ${TEST_VALUE} does not match ${_PWD} from input ${TEST_FILE}"
+        return_value=1
+    fi
+    return ${return_value}
+}
+
+function test_get_absolute_path_02 () {
+    # Test ./file
+    local return_value=0
+    local _PWD=${PWD}
+    local TEST_VALUE
+    local TEST_FILE="${0}"
+
+    TEST_VALUE=$(get_absolute_path ${TEST_FILE})
+    note "${TEST_FILE} -> ${TEST_VALUE}"
+    if [ "${TEST_VALUE}" != "${_PWD}" ]; then
+        warn "Value ${TEST_VALUE} does not match ${_PWD} from input ${0}"
+        return_value=1
+    fi
+    return ${return_value}
+}
+
+function test_get_absolute_path_03 () {
+    # Test /path/file
+    local return_value=0
+    local _PWD=${PWD}
+    local TEST_VALUE
+    local TEST_FILE="${PWD}/test_helpers.sh"
+
+    TEST_VALUE=$(get_absolute_path ${TEST_FILE})
+    if [ "${TEST_VALUE}" != "${_PWD}" ]; then
+        warn "Value ${TEST_VALUE} does not match ${_PWD} from input ${TEST_FILE}"
+        return_value=1
+    fi
+    return ${return_value}
+}
+
+function test_get_absolute_path_04 () {
+    #Test ../file path
+    local return_value=0
+    local _PWD=${PWD}
+    local TEST_VALUE
+    local TEST_FILE="../helpers.sh"
+
+    TEST_VALUE=$(get_absolute_path ${TEST_FILE})
+    if [ "${TEST_VALUE}" != "${_PWD}" ]; then
+        warn "Value ${TEST_VALUE} does not match ${_PWD} from input ${TEST_FILE}"
+        return_value=1
+    fi
+    return ${return_value}
+}
+
 test_wrapper "function include()" test_helpers_include
+test_wrapper "function get_absolute_path()_01 file" test_get_absolute_path_01
+test_wrapper "function get_absolute_path()_02 ./file" test_get_absolute_path_02
+test_wrapper "function get_absolute_path()_03 /path/file" test_get_absolute_path_03
+test_wrapper "function get_absolute_path()_04 ../file" test_get_absolute_path_04
