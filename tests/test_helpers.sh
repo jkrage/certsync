@@ -95,8 +95,15 @@ function test_get_absolute_path_04 () {
     return ${return_value}
 }
 
+function test_uname-s () {
+    if [ -z "${UNAME_S}" ]; then
+        return 1
+    fi
+}
+
 test_wrapper "function include()" test_helpers_include
 test_wrapper "function get_absolute_path()_01 file" test_get_absolute_path_01
 test_wrapper "function get_absolute_path()_02 ./file" test_get_absolute_path_02
 test_wrapper "function get_absolute_path()_03 /path/file" test_get_absolute_path_03
 test_wrapper "function get_absolute_path()_04 ../file" test_get_absolute_path_04
+test_wrapper "variable UNAME_S" test_uname-s
