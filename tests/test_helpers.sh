@@ -9,8 +9,8 @@ source "$(dirname $0)/../helpers.sh" || (echo "ERROR: helpers.sh not found!" ;ex
 function test_wrapper () {
     TEST_LABEL=$1
     TEST_FUNCTION=$2
-    output "Testing: ${TEST_LABEL}"
-    ${TEST_FUNCTION} >/dev/null 2>&1 && output "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
+    note "Testing: ${TEST_LABEL}"
+    ${TEST_FUNCTION} >/dev/null 2>&1 && note "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
 }
 
 #TODO: Test the pretty output functions
