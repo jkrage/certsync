@@ -16,11 +16,9 @@ function test_wrapper () {
 #TODO: Test the pretty output functions
 
 function test_helpers_include () {
-    local return_value
+    local return_value=0
 	include "test_helpers_include.sh"
-    if [ ! -z "${__TEST_HELPERS_INCLUDE_FUNCTION}" ]; then
-        return_value=0
-    else
+    if [ -z "${__TEST_HELPERS_INCLUDE_FUNCTION}" ]; then
         return_value=1
     fi
     return ${return_value}
