@@ -9,8 +9,13 @@ source "$(dirname $0)/../helpers.sh" || (echo "ERROR: helpers.sh not found!" ;ex
 function test_wrapper () {
     local TEST_LABEL=$1
     local TEST_FUNCTION=$2
-    debug "Testing: ${TEST_LABEL}"
-    ${TEST_FUNCTION} >/dev/null 2>&1 && note "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
+    local PRESERVE_OUTPUT=$3
+    local OUTPUT_OPTION=""
+    debug "Testing: ${TEST_LABEL} using ${TEST_FUNCTION}"
+    if [ ! -z "${PRESERVE_OUTPUT}" ]; then
+        OUTPUT_OPTION=" >/dev/null 2>&1"
+    fi
+    ${TEST_FUNCTION}${OUTPUT_OPTION} && note "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
 }
 
 #TODO: Test the pretty output functions
