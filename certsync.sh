@@ -32,7 +32,7 @@
 # Report status
 
 # Load setup helper variables and functions
-source "$(dirname $0)/helpers.sh" || (echo "ERROR: helpers.sh not found!" ;exit 1)
+source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
 _CONFIG_FILE="${HOME}/.config/certsync.config"
 
 function load_config () {
