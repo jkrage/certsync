@@ -14,19 +14,19 @@ DEBUG=1
 # Find a useful tput
 CMD_TPUT=$(which tput)
 if [ -x "${CMD_TPUT}" ]; then
-	TXT_RESET="$(${CMD_TPUT} sgr0)"
-	TXT_BOLD="$(${CMD_TPUT} bold)"
-	TXT_ERROR="${TXT_BOLD}$(${CMD_TPUT} setaf 1)"
-	TXT_WARN="${TXT_BOLD}$(${CMD_TPUT} setaf 3)"
-	TXT_NOTE="${TXT_BOLD}$(${CMD_TPUT} setaf 2)"
-	TXT_DEBUG="${TXT_BOLD}$(${CMD_TPUT} setaf 4)"
+	_TXT_RESET="$(${CMD_TPUT} sgr0)"
+	_TXT_BOLD="$(${CMD_TPUT} bold)"
+	_TXT_ERROR="${_TXT_BOLD}$(${CMD_TPUT} setaf 1)"
+	_TXT_WARN="${_TXT_BOLD}$(${CMD_TPUT} setaf 3)"
+	_TXT_NOTE="${_TXT_BOLD}$(${CMD_TPUT} setaf 2)"
+	_TXT_DEBUG="${_TXT_BOLD}$(${CMD_TPUT} setaf 4)"
 else
-	TXT_RESET=""
-	TXT_BOLD=""
-	TXT_ERROR=""
-	TXT_WARN=""
-	TXT_NOTE=""
-	TXT_DEBUG=""
+	_TXT_RESET=""
+	_TXT_BOLD=""
+	_TXT_ERROR=""
+	_TXT_WARN=""
+	_TXT_NOTE=""
+	_TXT_DEBUG=""
 fi
 
 #
@@ -37,21 +37,21 @@ function output () {
 }
 
 function note () {
-	output "${TXT_NOTE}NOTE:${TXT_RESET} " $*
+	output "${_TXT_NOTE}NOTE:${_TXT_RESET} " $*
 }
 
 function error () {
-	output "${TXT_ERROR}ERROR:${TXT_RESET} " $*
+	output "${_TXT_ERROR}ERROR:${_TXT_RESET} " $*
 	exit 1
 }
 
 function warn () {
-	output "${TXT_WARN}WARNING:${TXT_RESET} " $*
+	output "${_TXT_WARN}WARNING:${_TXT_RESET} " $*
 }
 
 function debug () {
 	if [[ ${DEBUG} ]]; then
-		output "${TXT_DEBUG}DEBUG:${TXT_RESET} " $*
+		output "${_TXT_DEBUG}DEBUG:${_TXT_RESET} " $*
 	fi
 }
 
