@@ -26,6 +26,7 @@ else
 	TXT_ERROR=""
 	TXT_WARN=""
 	TXT_NOTE=""
+	TXT_DEBUG=""
 fi
 
 #
