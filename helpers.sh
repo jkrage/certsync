@@ -48,6 +48,7 @@ function note () {
 function error () {
 	local NOEXIT=""
 	local EXITVALUE=1
+	local LABEL="ERROR:"
 	local arg
 	for arg in "$@"; do
 		case ${arg} in
@@ -63,9 +64,13 @@ function error () {
 				EXITVALUE=${arg#--*=}
 				shift
 				;;
+			'--label='* )
+				LABEL=${arg#--*=}
+				shift
+				;;
 		esac
 	done
-	output "${_TXT_ERROR}ERROR:${_TXT_RESET} " "$@"
+	output "${_TXT_ERROR}${LABEL}${_TXT_RESET} " "$@"
 	if [ -z "${NOEXIT}" ]; then
 		exit ${EXITVALUE}
 	fi
