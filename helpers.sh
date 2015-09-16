@@ -48,16 +48,17 @@ function note () {
 function error () {
 	local NOEXIT=""
 	local EXITVALUE=1
-	for arg in $@; do
+	for arg in "$@"; do
 		case ${arg} in
-			--)
-				continue
+			'--' )
+				shift
+				break
 				;;
-			--noexit)
+			'--noexit' )
 				NOEXIT=true
 				shift
 				;;
-			--exitvalue=*)
+			'--exitvalue='* )
 				EXITVALUE=${arg#--*=}
 				shift
 				;;
