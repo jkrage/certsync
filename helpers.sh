@@ -107,15 +107,30 @@ function get_absolute_path () {
 	echo "${DIR}"
 }
 
+# include [--nowarn] string ...
+# --nowarn does not emit a user-visible warning on failure
+# -- as an argument skips further arguments, needed if a non-argument string starts with --
 function include () {
+	local NOWARN=""
+	for arg in "$@"; do
+		case ${arg} in
+			'--' )
+				shift
+				break
+				;;
+			'--nowarn' )
+				NOWARN=true
+				shift
+				;;
+		esac
+	done
 	### source the provided script into the current environment
 	### after error-checking, and provide debug tracking.
 	if [ -f "$1" ]; then
 		debug "Sourcing ${2:-content} from $1"
 		source "$1"
 	else
-		# Any 3rd argument suppresses the warning
-		if [ -z "$3" ]; then
+		if [ -z "${NOWARN}" ]; then
 			warn "Include file $1 was skipped (not a file)"
 		fi
 		return -1
