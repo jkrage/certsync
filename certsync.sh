@@ -36,7 +36,7 @@ source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit
 _CONFIG_FILE="${HOME}/.config/certsync.config"
 
 function load_config () {
-    include $1 "certsync configuration file" -nowarn && _CONFIG_LOADED=true
+    include --nowarn "$1" "certsync configuration file" && _CONFIG_LOADED=true
     CMD_OPENSSL=${CMD_OPENSSL:-$(which openssl)}
     CMD_CERTTOOL=${CMD_CERTTOOL:-$(which certtool)}
     CMD_CERTUTIL=${CMD_CERTUTIL:-$(which certutil)}
