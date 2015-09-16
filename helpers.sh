@@ -48,6 +48,7 @@ function note () {
 function error () {
 	local NOEXIT=""
 	local EXITVALUE=1
+	local arg
 	for arg in "$@"; do
 		case ${arg} in
 			'--' )
@@ -112,6 +113,7 @@ function get_absolute_path () {
 # -- as an argument skips further arguments, needed if a non-argument string starts with --
 function include () {
 	local NOWARN=""
+	local arg
 	for arg in "$@"; do
 		case ${arg} in
 			'--' )
