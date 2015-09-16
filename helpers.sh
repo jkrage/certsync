@@ -40,9 +40,33 @@ function note () {
 	output "${_TXT_NOTE}NOTE:${_TXT_RESET} " "$@"
 }
 
+# error [--noexit] [-exitvalue=N] [--] string ...
+# By default, exits script with error code 1
+# --noexit skips the exit call
+# --exitvalue=N uses integer N as exit value
+# -- as an argument skips further arguments, needed if a non-argument string starts with --
 function error () {
+	local NOEXIT=""
+	local EXITVALUE=1
+	for arg in $@; do
+		case ${arg} in
+			--)
+				continue
+				;;
+			--noexit)
+				NOEXIT=true
+				shift
+				;;
+			--exitvalue=*)
+				EXITVALUE=${arg#--*=}
+				shift
+				;;
+		esac
+	done
 	output "${_TXT_ERROR}ERROR:${_TXT_RESET} " "$@"
-	exit 1
+	if [ -z "${NOEXIT}" ]; then
+		exit ${EXITVALUE}
+	fi
 }
 
 function warn () {
