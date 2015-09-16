@@ -17,7 +17,7 @@ function test_wrapper () {
     if [ ! -z "${PRESERVE_OUTPUT}" ]; then
         OUTPUT_OPTION=" >/dev/null 2>&1"
     fi
-    ${TEST_FUNCTION}${OUTPUT_OPTION} && note "Passed: ${TEST_LABEL}" || warn "Failed: ${TEST_LABEL}"
+    ${TEST_FUNCTION}${OUTPUT_OPTION} && note "Passed: ${TEST_LABEL}" || error --noexit "Failed: ${TEST_LABEL}"
 }
 
 #TODO: Test the pretty output functions
