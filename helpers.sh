@@ -37,7 +37,17 @@ function output () {
 }
 
 function note () {
-	output "${_TXT_NOTE}NOTE:${_TXT_RESET} " "$@"
+	local LABEL="NOTE:"
+	local arg
+	for arg in "$@"; do
+		case ${arg} in
+			'--label='* )
+				LABEL=${arg#--*=}
+				shift
+				;;
+		esac
+	done
+	output "${_TXT_NOTE}${LABEL}${_TXT_RESET} " "$@"
 }
 
 # error [--noexit] [-exitvalue=N] [--] string ...
@@ -77,12 +87,30 @@ function error () {
 }
 
 function warn () {
-	output "${_TXT_WARN}WARNING:${_TXT_RESET} " "$*"
+	local LABEL="WARN:"
+	for arg in "$@"; do
+		case ${arg} in
+			'--label='* )
+				LABEL=${arg#--*=}
+				shift
+				;;
+		esac
+	done
+	output "${_TXT_WARN}${LABEL}${_TXT_RESET} " "$*"
 }
 
 function debug () {
+	local LABEL="DEBUG:"
+	for arg in "$@"; do
+		case ${arg} in
+			'--label='* )
+				LABEL=${arg#--*=}
+				shift
+				;;
+		esac
+	done
 	if [[ ${DEBUG} ]]; then
-		output "${_TXT_DEBUG}DEBUG:${_TXT_RESET} " "$@"
+		output "${_TXT_DEBUG}${LABEL}${_TXT_RESET} " "$@"
 	fi
 }
 
