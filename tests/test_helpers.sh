@@ -24,7 +24,7 @@ function test_wrapper () {
 
 function test_helpers_include () {
     local return_value=0
-	include "test_helpers_include.sh"
+	include "data_helpers_include.sh"
     if [ -z "${__TEST_HELPERS_INCLUDE_FUNCTION}" ]; then
         return_value=1
     fi
