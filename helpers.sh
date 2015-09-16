@@ -33,25 +33,25 @@ fi
 # Internal Functions
 #
 function output () {
-	echo $*
+	echo "$@"
 }
 
 function note () {
-	output "${_TXT_NOTE}NOTE:${_TXT_RESET} " $*
+	output "${_TXT_NOTE}NOTE:${_TXT_RESET} " "$@"
 }
 
 function error () {
-	output "${_TXT_ERROR}ERROR:${_TXT_RESET} " $*
+	output "${_TXT_ERROR}ERROR:${_TXT_RESET} " "$@"
 	exit 1
 }
 
 function warn () {
-	output "${_TXT_WARN}WARNING:${_TXT_RESET} " $*
+	output "${_TXT_WARN}WARNING:${_TXT_RESET} " "$*"
 }
 
 function debug () {
 	if [[ ${DEBUG} ]]; then
-		output "${_TXT_DEBUG}DEBUG:${_TXT_RESET} " $*
+		output "${_TXT_DEBUG}DEBUG:${_TXT_RESET} " "$@"
 	fi
 }
 
