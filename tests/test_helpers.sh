@@ -9,15 +9,26 @@ source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;e
 
 ### Master wrapper function for Testing
 function test_wrapper () {
+    local _INVERT=""
+    if [ "$1" == "--invert" ]; then
+        _INVERT="true"
+        shift
+    fi
+
     local TEST_LABEL=$1
     local TEST_FUNCTION=$2
     local PRESERVE_OUTPUT=$3
     local OUTPUT_OPTION=""
+
     debug "Testing: ${TEST_LABEL} using ${TEST_FUNCTION}"
     if [ ! -z "${PRESERVE_OUTPUT}" ]; then
         OUTPUT_OPTION=" >/dev/null 2>&1"
     fi
-    ${TEST_FUNCTION}${OUTPUT_OPTION} && note "Passed: ${TEST_LABEL}" || error --noexit "Failed: ${TEST_LABEL}"
+    if [ -z "${_INVERT}" ]; then
+        ${TEST_FUNCTION}${OUTPUT_OPTION} && note "Passed: ${TEST_LABEL}" || error --noexit "Failed: ${TEST_LABEL}"
+    else
+        ${TEST_FUNCTION}${OUTPUT_OPTION} && error --noexit "Failed: ${TEST_LABEL}" || note "Passed: ${TEST_LABEL}"
+    fi
 }
 
 #TODO: Test the pretty output functions
