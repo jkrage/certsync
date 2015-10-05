@@ -57,6 +57,7 @@ function show_config () {
 }
 
 function verify_config () {
+    local _WARNINGS=0
     local _ERRORS=0
     if [ ! -x "${CMD_OPENSSL}" ]; then
         warn "The openssl command was not found, please set CMD_OPENSSL."
@@ -64,11 +65,14 @@ function verify_config () {
     fi
     if [ ! -x "${CMD_CERTTOOL}" ]; then
         warn "The Apple/OSX certtool command was not found, please set CMD_CERTTOOL."
-        _ERRORS=$((++_ERRORS))
+        _WARNINGS=$((++_WARNINGS))
     fi
     if [ ! -x "${CMD_CERTUTIL}" ]; then
         warn "The Mozilla/NSS certutil command was not found, please set CMD_CERTUTIL."
-        _ERRORS=$((++_ERRORS))
+        _WARNINGS=$((++_WARNINGS))
+    fi
+    if [[ ${_WARNINGS} -gt 0 ]]; then
+        warn "Please review the prior warnings before continuing."
     fi
     if [[ ${_ERRORS} -gt 0 ]]; then
         error "Critical commands were not found, aborting."
