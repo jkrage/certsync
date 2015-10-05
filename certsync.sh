@@ -34,12 +34,14 @@
 # Load setup helper variables and functions
 source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
 _CONFIG_FILE="${HOME}/.config/certsync.config"
+_CERT_CACHE_DIR="${HOME}/.cache/certsync"
 
 function load_config () {
     include --nowarn "$1" "certsync configuration file" && _CONFIG_LOADED=true
     CMD_OPENSSL=${CMD_OPENSSL:-$(which openssl)}
     CMD_CERTTOOL=${CMD_CERTTOOL:-$(which certtool)}
     CMD_CERTUTIL=${CMD_CERTUTIL:-$(which certutil)}
+    DIR_CERT_CACHE=${DIR_CERT_CACHE:-$_CERT_CACHE_DIR}
 }
 
 function show_config () {
@@ -51,9 +53,10 @@ function show_config () {
     fi
     note "${_header}"
     debug "certsync script directory is ${_DIR_ORIGIN}."
-    note "  CMD_OPENSSL  :: ${CMD_OPENSSL}"
-    note "  CMD_CERTTOOL :: ${CMD_CERTTOOL}"
-    note "  CMD_CERTUTIL :: ${CMD_CERTUTIL}"
+    note "  CMD_OPENSSL    :: ${CMD_OPENSSL}"
+    note "  CMD_CERTTOOL   :: ${CMD_CERTTOOL}"
+    note "  CMD_CERTUTIL   :: ${CMD_CERTUTIL}"
+    note "  DIR_CERT_CACHE :: ${DIR_CERT_CACHE}"
 }
 
 function verify_config () {
@@ -71,13 +74,16 @@ function verify_config () {
         warn "The Mozilla/NSS certutil command was not found, please set CMD_CERTUTIL."
         _WARNINGS=$((++_WARNINGS))
     fi
+    if [ ! -d "${DIR_CERT_CACHE}" ]; then
+        warn "The certificate cache directory was not found, please set DIR_CERT_CACHE or create the directory."
+        _ERRORS=$((++_ERRORS))
+    fi
     if [[ ${_WARNINGS} -gt 0 ]]; then
         warn "Please review the prior warnings before continuing."
     fi
     if [[ ${_ERRORS} -gt 0 ]]; then
         error "Critical commands were not found, aborting."
     fi
-    debug "_ERRORS=${_ERRORS}"
 }
 
 load_config "${_CONFIG_FILE}"
