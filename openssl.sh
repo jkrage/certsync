@@ -44,12 +44,12 @@ function openssl_pem_to_der () {
 }
 
 function openssl_get_certinfo () {
-    local _CERT_TYPE="DER"
+    CERT_TYPE="DER"
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
-            '--label='* )
-                LABEL=${arg#--*=}
+            '--type='* )
+                CERT_TYPE=${arg#--*=}
                 shift
                 ;;
         esac
@@ -97,10 +97,12 @@ function openssl_get_certinfo () {
                 ;;
         esac
     done < <(${CMD_OPENSSL} x509 \
-             -inform ${_CERT_TYPE} -noout \
+             -inform ${CERT_TYPE} -noout \
              -serial -issuer -subject -dates -email -fingerprint \
              -in "${CERT_FILE}")
 
+    echo CERT_FILE=${CERT_FILE}
+    echo CERT_TYPE=${CERT_TYPE}
     echo SERIAL=${SERIAL}
     echo ISSUER=${ISSUER}
     echo SUBJECT=${SUBJECT}
