@@ -44,8 +44,7 @@ function openssl_pem_to_der () {
     FILE_INPUT=$1
     FILE_OUTPUT=${2%\.*}${_SUFFIX}
     debug "Convert a certificate from PEM to DER formats (${_SUFFIX})."
-    ${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}"
-    #TODO:Test success/failure
+    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || error "Conversion failed, see above message."
 }
 
 function openssl_get_certinfo () {
@@ -128,4 +127,4 @@ run_openssl
 openssl_pem_to_der
 openssl_get_certinfo "test_certificate.cer"
 #TODO: Get results of get_certinfo stashed
-openssl_pem_to_der --suffix=der "test_certificate.pem" "test_certificate.cer"
+openssl_pem_to_der --suffix=der "2test_certificate.pem" "test_certificate.cer"
