@@ -45,6 +45,8 @@ function openssl_pem_to_der () {
 
 function openssl_get_certinfo () {
     CERT_TYPE="DER"
+    CERT_SERIAL=""
+    CERT_ISSUER=""
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
@@ -63,32 +65,32 @@ function openssl_get_certinfo () {
     while read line ;do
         case ${line} in
             'issuer='* )
-                ISSUER=${line#issuer=}
+                CERT_ISSUER=${line#issuer=}
                 continue
                 ;;
             'notAfter='* )
-                NOTAFTER=${line#notAfter=}
+                CERT_NOTAFTER=${line#notAfter=}
                 continue
                 ;;
             'notBefore='* )
-                NOTBEFORE=${line#notBefore=}
+                CERT_NOTBEFORE=${line#notBefore=}
                 continue
                 ;;
             'serial='* )
-                SERIAL=${line#serial=}
+                CERT_SERIAL=${line#serial=}
                 continue
                 ;;
             'subject='* )
-                SUBJECT=${line#subject=}
+                CERT_SUBJECT=${line#subject=}
                 continue
                 ;;
             *' Fingerprint'* )
-                FINGERPRINT_TYPE=${line%% Fingerprint=*}
-                FINGERPRINT_TEXT=${line#* Fingerprint=}
+                CERT_FINGERPRINT_TYPE=${line%% Fingerprint=*}
+                CERT_FINGERPRINT_TEXT=${line#* Fingerprint=}
                 continue
                 ;;
             *'@'* )
-                EMAIL=${line}
+                CERT_EMAIL=${line}
                 continue
                 ;;
             * )
@@ -103,14 +105,14 @@ function openssl_get_certinfo () {
 
     echo CERT_FILE=${CERT_FILE}
     echo CERT_TYPE=${CERT_TYPE}
-    echo SERIAL=${SERIAL}
-    echo ISSUER=${ISSUER}
-    echo SUBJECT=${SUBJECT}
-    echo EMAIL=${EMAIL}
-    echo NOTBEFORE=${NOTBEFORE}
-    echo NOTAFTER=${NOTAFTER}
-    echo FINGERPRINT_TYPE=${FINGERPRINT_TYPE}
-    echo FINGERPRINT_TEXT=${FINGERPRINT_TEXT}
+    echo CERT_SERIAL=${CERT_SERIAL}
+    echo CERT_ISSUER=${CERT_ISSUER}
+    echo CERT_SUBJECT=${CERT_SUBJECT}
+    echo CERT_EMAIL=${CERT_EMAIL}
+    echo CERT_NOTBEFORE=${CERT_NOTBEFORE}
+    echo CERT_NOTAFTER=${CERT_NOTAFTER}
+    echo CERT_FINGERPRINT_TYPE=${CERT_FINGERPRINT_TYPE}
+    echo CERT_FINGERPRINT_TEXT=${CERT_FINGERPRINT_TEXT}
 }
 
 #->TMP
