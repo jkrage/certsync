@@ -118,3 +118,4 @@ CMD_OPENSSL="/usr/bin/openssl"
 run_openssl
 openssl_pem_to_der
 openssl_get_certinfo "test_certificate.cer"
+#TODO: Get results of get_certinfo stashed
