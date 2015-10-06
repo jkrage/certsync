@@ -31,16 +31,21 @@ function run_openssl () {
 }
 
 function openssl_pem_to_der () {
+    local _SUFFIX=".cer"
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
-            '--type='* )
-                _CERT_TYPE=${arg#--*=}
+            '--suffix='* )
+                _SUFFIX=".${arg#--*=}"
                 shift
                 ;;
         esac
     done
-    debug "Convert a certificate from PEM to DER formats."
+    FILE_INPUT=$1
+    FILE_OUTPUT=${2%\.*}${_SUFFIX}
+    debug "Convert a certificate from PEM to DER formats (${_SUFFIX})."
+    ${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}"
+    #TODO:Test success/failure
 }
 
 function openssl_get_certinfo () {
@@ -123,3 +128,4 @@ run_openssl
 openssl_pem_to_der
 openssl_get_certinfo "test_certificate.cer"
 #TODO: Get results of get_certinfo stashed
+openssl_pem_to_der --suffix=der "test_certificate.pem" "test_certificate.cer"
