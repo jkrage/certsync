@@ -9,7 +9,7 @@
 ###       openssl x509 -inform DER -serial -issuer -subject -email -noout -in STAGING_FILE.cer
 ###   Generate a canonical file name for the certificate
 
-function _check_runtime () {
+function _openssl_check_runtime () {
     # Error checking, ensure our helper functions have been loaded
     if [ -z "$(type -t error)" ]; then
         echo "EEK. You are not running from a known environment. Aborting."
@@ -24,7 +24,7 @@ function _check_runtime () {
 }
 
 # If runtime is checked, we presume running in a specific environment
-#_check_runtime
+#_openssl_check_runtime
 
 function run_openssl () {
     echo $(${CMD_OPENSSL} version)
