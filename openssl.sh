@@ -43,7 +43,7 @@ function openssl_pem_to_der () {
                 shift
                 continue
                 ;;
-            '--noabort' )
+            '--warnonly' )
                 _EXIT="warn"
                 _EXIT_VALUE=0
                 shift
@@ -150,4 +150,4 @@ run_openssl
 openssl_get_certinfo "test_certificate.cer"
 #TODO: Get results of get_certinfo stashed
 openssl_pem_to_der --suffix=der "test_certificate.pem"
-openssl_pem_to_der --noabort --suffix=der "does-not-exist"
+openssl_pem_to_der --warnonly --suffix=der "does-not-exist"
