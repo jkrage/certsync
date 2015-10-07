@@ -34,6 +34,7 @@ function openssl_pem_to_der () {
     # Suffixes are generally pem, cer (for DER)
     local _SUFFIX=".cer"
     local _EXIT="error"
+    local _EXIT_VALUE=1
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
@@ -44,6 +45,7 @@ function openssl_pem_to_der () {
                 ;;
             '--noabort' )
                 _EXIT="warn"
+                _EXIT_VALUE=0
                 shift
                 continue
                 ;;
@@ -54,7 +56,7 @@ function openssl_pem_to_der () {
     FILE_INPUT=$1
     if [ ! -r "${FILE_INPUT}" ]; then
         ${_EXIT} "openssl_pem_to_der: File not readable: ${FILE_INPUT}"
-        return 1
+        return ${_EXIT_VALUE}
     fi
     if [ -z "$2" ]; then
         # Use the original filename, with our preferred _SUFFIX
@@ -65,7 +67,7 @@ function openssl_pem_to_der () {
 
     # Convert the input certificate to the requested output file and format
     debug "openssl_pem_to_der: Convert a certificate from PEM to DER formats (${_SUFFIX})."
-    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || error "Conversion failed, see above message."
+    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || ${_EXIT} "Conversion failed, see above message."
 }
 
 function openssl_get_certinfo () {
