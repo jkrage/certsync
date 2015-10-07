@@ -31,19 +31,40 @@ function run_openssl () {
 }
 
 function openssl_pem_to_der () {
+    # Suffixes are generally pem, cer (for DER)
     local _SUFFIX=".cer"
+    local _EXIT="error"
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
             '--suffix='* )
                 _SUFFIX=".${arg#--*=}"
                 shift
+                continue
+                ;;
+            '--noabort' )
+                _EXIT="warn"
+                shift
+                continue
                 ;;
         esac
     done
+
+    # Determine the input and output filenames, including suffixes
     FILE_INPUT=$1
-    FILE_OUTPUT=${2%\.*}${_SUFFIX}
-    debug "Convert a certificate from PEM to DER formats (${_SUFFIX})."
+    if [ ! -r "${FILE_INPUT}" ]; then
+        ${_EXIT} "openssl_pem_to_der: File not readable: ${FILE_INPUT}"
+        return 1
+    fi
+    if [ -z "$2" ]; then
+        # Use the original filename, with our preferred _SUFFIX
+        FILE_OUTPUT=${1%\.*}${_SUFFIX}
+    else
+        FILE_OUTPUT=${2%\.*}${_SUFFIX}
+    fi
+
+    # Convert the input certificate to the requested output file and format
+    debug "openssl_pem_to_der: Convert a certificate from PEM to DER formats (${_SUFFIX})."
     (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || error "Conversion failed, see above message."
 }
 
@@ -124,7 +145,7 @@ source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit
 CMD_OPENSSL="/usr/bin/openssl"
 #<-TMP
 run_openssl
-openssl_pem_to_der
 openssl_get_certinfo "test_certificate.cer"
 #TODO: Get results of get_certinfo stashed
-openssl_pem_to_der --suffix=der "2test_certificate.pem" "test_certificate.cer"
+openssl_pem_to_der --suffix=der "test_certificate.pem"
+openssl_pem_to_der --noabort --suffix=der "does-not-exist"
