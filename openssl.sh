@@ -25,10 +25,6 @@ function _openssl_check_runtime () {
 # If runtime is checked, we presume we are in a specific run-time environment
 #_openssl_check_runtime
 
-function run_openssl () {
-    echo $(${CMD_OPENSSL} version)
-}
-
 function openssl_pem_to_der () {
     # Suffixes are generally pem, cer (for DER)
     local _SUFFIX=".cer"
@@ -145,7 +141,6 @@ function openssl_get_certinfo () {
 source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
 CMD_OPENSSL="/usr/bin/openssl"
 #<-TMP
-run_openssl
 openssl_get_certinfo "test_certificate.cer"
 #TODO: Get results of get_certinfo stashed
 openssl_pem_to_der --suffix=der "test_certificate.pem"
