@@ -7,7 +7,6 @@
 ###       openssl x509 -inform PEM -in STAGING_FILE.pem -OUTFORM PEM -OUT STAGING_FILE.cer
 ###   Extract certificate serial, issuer, subject, email
 ###       openssl x509 -inform DER -serial -issuer -subject -email -noout -in STAGING_FILE.cer
-###   Generate a canonical file name for the certificate
 
 function _openssl_check_runtime () {
     # Error checking, ensure our helper functions have been loaded
