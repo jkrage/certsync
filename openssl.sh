@@ -101,11 +101,11 @@ function openssl_pem_to_der () {
     (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || ${_EXIT} "Conversion failed, see above message."
 }
 
-# openssl_get_certinfo [--type=DER | PEM] cert-file.cer
+# openssl_load_certinfo [--type=DER | PEM] cert-file.cer
 # --type sets the certificate file storage type (PEM or DER)
 # The outputs of the openssl command are prased and stored in
 # the CERT_ variable set
-function openssl_get_certinfo () {
+function openssl_load_certinfo () {
     # Initialize state variables and defaults
     cert_info_init
     CERT_TYPE="DER"
@@ -170,15 +170,16 @@ function openssl_get_certinfo () {
              -inform ${CERT_TYPE} -noout \
              -serial -issuer -subject -dates -email -fingerprint \
              -in "${CERT_FILE}")
-
-    cert_info_show
 }
 
 #->TMP
 source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
 CMD_OPENSSL="/usr/bin/openssl"
 #<-TMP
-openssl_get_certinfo "test_certificate.cer"
+openssl_load_certinfo "test_certificate.cer"
+cert_info_show
 #TODO: Get results of get_certinfo stashed
 openssl_pem_to_der --suffix=der "test_certificate.pem"
+openssl_load_certinfo --type=PEM "test_certificate.pem"
+cert_info_show
 openssl_pem_to_der --warnonly --suffix=der "does-not-exist"
