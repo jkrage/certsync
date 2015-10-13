@@ -23,7 +23,7 @@ function _openssl_check_runtime () {
 }
 
 # If runtime is checked, we presume we are in a specific run-time environment
-#_openssl_check_runtime
+_openssl_check_runtime
 
 # cert_info_init
 # Resets all internal CERT_ state variables to empty values
@@ -171,15 +171,3 @@ function openssl_load_certinfo () {
              -serial -issuer -subject -dates -email -fingerprint \
              -in "${CERT_FILE}")
 }
-
-#->TMP
-source "$(dirname $0)/helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
-CMD_OPENSSL="/usr/bin/openssl"
-#<-TMP
-openssl_load_certinfo "test_certificate.cer"
-cert_info_show
-#TODO: Get results of get_certinfo stashed
-openssl_pem_to_der --suffix=der "test_certificate.pem"
-openssl_load_certinfo --type=PEM "test_certificate.pem"
-cert_info_show
-openssl_pem_to_der --warnonly --suffix=der "does-not-exist"
