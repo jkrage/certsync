@@ -17,7 +17,8 @@ function _openssl_check_runtime () {
 
     # We need our openssl path
     if [ -z "${CMD_OPENSSL}" ]; then
-        error "CMD_OPENSSL is not defined. Who are you?"
+        error --noexit "CMD_OPENSSL is not defined. Cannot safely proceed."
+        error "Either define CMD_OPENSSL (preferred) or disable _openssl_check_runtime."
         exit 1
     fi
 }
