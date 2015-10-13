@@ -25,6 +25,37 @@ function _openssl_check_runtime () {
 # If runtime is checked, we presume we are in a specific run-time environment
 #_openssl_check_runtime
 
+# cert_info_init
+# Resets all internal CERT_ state variables to empty values
+function cert_info_init () {
+    CERT_FILE=""
+    CERT_TYPE=""
+    CERT_SERIAL=""
+    CERT_ISSUER=""
+    CERT_SUBJECT=""
+    CERT_EMAIL=""
+    CERT_NOTBEFORE=""
+    CERT_NOTAFTER=""
+    CERT_FINGERPRINT_TYPE=""
+    CERT_FINGERPRINT_TEXT=
+}
+
+# cert_info_show
+# Generates an output of the currently-tracked certificate, using stored
+# state values
+function cert_info_show () {
+    output CERT_FILE=${CERT_FILE}
+    output CERT_TYPE=${CERT_TYPE}
+    output CERT_SERIAL=${CERT_SERIAL}
+    output CERT_ISSUER=${CERT_ISSUER}
+    output CERT_SUBJECT=${CERT_SUBJECT}
+    output CERT_EMAIL=${CERT_EMAIL}
+    output CERT_NOTBEFORE=${CERT_NOTBEFORE}
+    output CERT_NOTAFTER=${CERT_NOTAFTER}
+    output CERT_FINGERPRINT_TYPE=${CERT_FINGERPRINT_TYPE}
+    output CERT_FINGERPRINT_TEXT=${CERT_FINGERPRINT_TEXT}
+}
+
 # openssl_pem_to_der [--warnonly] [--suffix=DER] cert-file.pem [cert-file.cer]
 # Given a PEM-formatted X509v3 certificate file, generate the
 # DER-format (binary) equivalent in a new file
@@ -70,10 +101,15 @@ function openssl_pem_to_der () {
     (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || ${_EXIT} "Conversion failed, see above message."
 }
 
+# openssl_get_certinfo [--type=DER | PEM] cert-file.cer
+# --type sets the certificate file storage type (PEM or DER)
+# The outputs of the openssl command are prased and stored in
+# the CERT_ variable set
 function openssl_get_certinfo () {
+    # Initialize state variables and defaults
+    cert_info_init
     CERT_TYPE="DER"
-    CERT_SERIAL=""
-    CERT_ISSUER=""
+
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
@@ -130,16 +166,7 @@ function openssl_get_certinfo () {
              -serial -issuer -subject -dates -email -fingerprint \
              -in "${CERT_FILE}")
 
-    echo CERT_FILE=${CERT_FILE}
-    echo CERT_TYPE=${CERT_TYPE}
-    echo CERT_SERIAL=${CERT_SERIAL}
-    echo CERT_ISSUER=${CERT_ISSUER}
-    echo CERT_SUBJECT=${CERT_SUBJECT}
-    echo CERT_EMAIL=${CERT_EMAIL}
-    echo CERT_NOTBEFORE=${CERT_NOTBEFORE}
-    echo CERT_NOTAFTER=${CERT_NOTAFTER}
-    echo CERT_FINGERPRINT_TYPE=${CERT_FINGERPRINT_TYPE}
-    echo CERT_FINGERPRINT_TEXT=${CERT_FINGERPRINT_TEXT}
+    cert_info_show
 }
 
 #->TMP
