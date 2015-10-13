@@ -119,11 +119,16 @@ function openssl_get_certinfo () {
                 ;;
         esac
     done
+
+    # Assume first remaining argument is the input filename
     CERT_FILE=$1
     shift
     if [ -z "${CERT_FILE}" -o ! -r "${CERT_FILE}" ]; then
         error "Invalid file provided to openssl_get_certinfo."
     fi
+
+    # Run the openssl command line, parse the results. Uses a read loop
+    # pulling data from a sub-shell where the openssl command line is run.
     debug "Extract certificate information (serial, issuer, subject, email)."
     while read line ;do
         case ${line} in
