@@ -22,7 +22,7 @@ function _openssl_check_runtime () {
     fi
 }
 
-# If runtime is checked, we presume running in a specific environment
+# If runtime is checked, we presume we are in a specific run-time environment
 #_openssl_check_runtime
 
 function run_openssl () {
