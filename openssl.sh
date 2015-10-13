@@ -25,6 +25,11 @@ function _openssl_check_runtime () {
 # If runtime is checked, we presume we are in a specific run-time environment
 #_openssl_check_runtime
 
+# openssl_pem_to_der [--warnonly] [--suffix=DER] cert-file.pem [cert-file.cer]
+# Given a PEM-formatted X509v3 certificate file, generate the
+# DER-format (binary) equivalent in a new file
+# --warnonly returns a 0 value (success) despite an unreadable input file
+# --suffix=SUFFIX overrides the default ".cer" suffix (including "")
 function openssl_pem_to_der () {
     # Suffixes are generally pem, cer (for DER)
     local _SUFFIX=".cer"
