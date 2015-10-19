@@ -36,11 +36,17 @@ function test_openssl_test_env_ready () {
 }
 
 function test_openssl_pem_to_der_01 () {
-    return
+    openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
 }
 
 function test_openssl_get_certinfo_01 () {
-    return
+    openssl_load_certinfo "${TEST_CERT_DER}"
+    cert_info_show
+}
+
+function test_openssl_get_certinfo_02 () {
+    openssl_load_certinfo --type=PEM "${TEST_CERT_PEM}"
+    cert_info_show
 }
 
 # Prepare the testing environment
@@ -52,11 +58,5 @@ TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
 
 test_wrapper "environment: ensure ${TEST_CERT_PEM} exists and ${TEST_CERT_NONEXISTENT} does not exist" test_openssl_test_env_ready
 test_wrapper "function test_openssl_pem_to_der()_01" test_openssl_pem_to_der_01
-
-openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
-openssl_load_certinfo "${TEST_CERT_DER}"
-cert_info_show
-openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
-openssl_load_certinfo --type=PEM "${TEST_CERT_PEM}"
-cert_info_show
-openssl_pem_to_der --warnonly --suffix=der "${TEST_CERT_NONEXISTENT}"
+test_wrapper "function openssl_get_certinfo 01" test_openssl_get_certinfo_01
+test_wrapper "function openssl_get_certinfo 02" test_openssl_get_certinfo_02
