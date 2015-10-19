@@ -57,27 +57,18 @@ function cert_info_show () {
     output CERT_FINGERPRINT_TEXT=${CERT_FINGERPRINT_TEXT}
 }
 
-# openssl_pem_to_der [--warnonly] [--suffix=DER] cert-file.pem [cert-file.cer]
+# openssl_pem_to_der [--suffix=DER] cert-file.pem [cert-file.cer]
 # Given a PEM-formatted X509v3 certificate file, generate the
 # DER-format (binary) equivalent in a new file
-# --warnonly returns a 0 value (success) despite an unreadable input file
 # --suffix=SUFFIX overrides the default ".cer" suffix (including "")
 function openssl_pem_to_der () {
     # Suffixes are generally pem, cer (for DER)
     local _SUFFIX=".cer"
-    local _EXIT="error"
-    local _EXIT_VALUE=1
     # Process function arguments
     for arg in "$@"; do
         case ${arg} in
             '--suffix='* )
                 _SUFFIX=".${arg#--*=}"
-                shift
-                continue
-                ;;
-            '--warnonly' )
-                _EXIT="warn"
-                _EXIT_VALUE=0
                 shift
                 continue
                 ;;
@@ -87,8 +78,8 @@ function openssl_pem_to_der () {
     # Determine the input and output filenames, including suffixes
     FILE_INPUT=$1
     if [ ! -r "${FILE_INPUT}" ]; then
-        ${_EXIT} "openssl_pem_to_der: File not readable: ${FILE_INPUT}"
-        return ${_EXIT_VALUE}
+        error --noexit "openssl_pem_to_der: File not readable: ${FILE_INPUT}"
+        return -1
     fi
     if [ -z "$2" ]; then
         # Use the original filename, with our preferred _SUFFIX
@@ -99,7 +90,7 @@ function openssl_pem_to_der () {
 
     # Convert the input certificate to the requested output file and format
     debug "openssl_pem_to_der: Convert a certificate from PEM to DER formats (${_SUFFIX})."
-    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || ${_EXIT} "Conversion failed, see above message."
+    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || error --noexit "Conversion failed, see above message."
 }
 
 # openssl_load_certinfo [--type=DER | PEM] cert-file.cer
