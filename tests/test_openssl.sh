@@ -88,13 +88,19 @@ function test_openssl_pem_to_der_04 () {
 }
 
 function test_openssl_get_certinfo_01 () {
-    openssl_load_certinfo "${TEST_CERT_DER}"
-    cert_info_show
+    # Test we loaded the expected .cer certificate by checking the serial number
+    debug "Checking serial number of ${TEST_CERT_CER}, expecting ${TEST_CERT_SERIAL}"
+    cert_info_init
+    openssl_load_certinfo "${TEST_CERT_CER}"
+    [ "${CERT_SERIAL}" == "${TEST_CERT_SERIAL}" ]
 }
 
 function test_openssl_get_certinfo_02 () {
-    openssl_load_certinfo --type=PEM "${TEST_CERT_PEM}"
-    cert_info_show
+    # Test we loaded the expected .pem certificate by checking the serial number
+    debug "Checking serial number of ${TEST_CERT_PEM}, expecting ${TEST_CERT_SERIAL}"
+    cert_info_init
+    openssl_load_certinfo --type=PEM "${TEST_CERT_PEM2}"
+    [ "${CERT_SERIAL}" == "${TEST_CERT_SERIAL}" ]
 }
 
 # Prepare the testing environment
@@ -103,7 +109,7 @@ include "../openssl.sh"
 TEST_CERT_PEM="certificate_for_testing.pem"
 TEST_CERT_DER="certificate_for_testing.der"
 TEST_CERT_CER="certificate_for_testing.cer"
-TEST_CERT_SERIAL="BADBADBAD"
+TEST_CERT_SERIAL="0BADBADBAD"
 TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
 TEST_CERT_NOTACERT="test_openssl.config"
 
