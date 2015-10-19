@@ -89,3 +89,7 @@ function verify_config () {
 load_config "${_CONFIG_FILE}"
 show_config
 verify_config
+#download_certs
+#convert_certs_to_canonical_form (and cache directory)
+#upload_certs_to_nss_profile(s)
+#upload_certs_to_osx_keychain
