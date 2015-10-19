@@ -116,7 +116,8 @@ function openssl_load_certinfo () {
     CERT_FILE=$1
     shift
     if [ -z "${CERT_FILE}" -o ! -r "${CERT_FILE}" ]; then
-        error "Invalid file provided to openssl_get_certinfo."
+        error --noexit "Invalid file provided to openssl_get_certinfo."
+        return 1
     fi
 
     # Run the openssl command line, parse the results. Uses a read loop
