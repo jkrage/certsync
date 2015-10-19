@@ -1,0 +1,6 @@
+# Ignore testing certificate and interim files
+certificate_for_testing.cer
+certificate_for_testing.der
+certificate_for_testing.pem
+tmp_cert.key
+tmp_cert.csr
