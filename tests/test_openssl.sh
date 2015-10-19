@@ -55,6 +55,23 @@ function test_openssl_pem_to_der_02 () {
 
 function test_openssl_pem_to_der_03 () {
     # Expect success, nominal path
+    debug "Generating .cer form of ${TEST_CERT_PEM} (expecting ${TEST_CERT_CER})"
+    local return_value=1
+    openssl_pem_to_der "${TEST_CERT_PEM}"
+    return_value=$?
+
+    # If conversion succeeded, ensure the expected output file exists as well
+    if [ ${return_value} == 0 ]; then
+        if [ ! -f "${TEST_CERT_CER}" ]; then
+            warn "Expected file ${TEST_CERT_CER} is missing."
+            return_value=1
+        fi
+    fi
+    return ${return_value}
+}
+
+function test_openssl_pem_to_der_04 () {
+    # Expect success, nominal path (.der)
     debug "Generating .der form of ${TEST_CERT_PEM} (expecting ${TEST_CERT_DER})"
     local return_value=1
     openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
@@ -93,6 +110,7 @@ TEST_CERT_NOTACERT="test_openssl.config"
 test_wrapper "environment: ensure ${TEST_CERT_PEM} exists and ${TEST_CERT_NONEXISTENT} does not exist" test_openssl_test_env_ready
 test_wrapper --invert "function test_openssl_pem_to_der() 01 (missing input)" test_openssl_pem_to_der_01
 test_wrapper --invert "function test_openssl_pem_to_der() 02 (bad input)" test_openssl_pem_to_der_02
-test_wrapper "function test_openssl_pem_to_der() 03 (good input)" test_openssl_pem_to_der_03
+test_wrapper "function test_openssl_pem_to_der() 03 (good input, .cer)" test_openssl_pem_to_der_03
+test_wrapper "function test_openssl_pem_to_der() 03 (good input, .der)" test_openssl_pem_to_der_04
 test_wrapper "function openssl_get_certinfo 01" test_openssl_get_certinfo_01
 test_wrapper "function openssl_get_certinfo 02" test_openssl_get_certinfo_02
