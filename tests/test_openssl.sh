@@ -39,15 +39,17 @@ function test_openssl_get_certinfo_01 () {
     return
 }
 
-# Prepare the operating environment
+# Prepare the testing environment
 CMD_OPENSSL="/usr/bin/openssl"
 include "../openssl.sh"
+TEST_CERT_PEM="test_certificate.pem"
+TEST_CERT_DER="test_certificate.cer"
 
 test_wrapper "function test_openssl_pem_to_der()_01" test_openssl_pem_to_der_01
 
-openssl_load_certinfo "test_certificate.cer"
+openssl_load_certinfo "${TEST_CERT_DER}"
 cert_info_show
-openssl_pem_to_der --suffix=der "test_certificate.pem"
-openssl_load_certinfo --type=PEM "test_certificate.pem"
+openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
+openssl_load_certinfo --type=PEM "${TEST_CERT_PEM}"
 cert_info_show
 openssl_pem_to_der --warnonly --suffix=der "does-not-exist"
