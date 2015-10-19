@@ -90,7 +90,7 @@ function openssl_pem_to_der () {
 
     # Convert the input certificate to the requested output file and format
     debug "openssl_pem_to_der: Convert a certificate from PEM to DER formats (${_SUFFIX})."
-    (${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}") || error --noexit "Conversion failed, see above message."
+    ${CMD_OPENSSL} x509 -inform PEM -outform DER -in "${FILE_INPUT}" -out "${FILE_OUTPUT}" || error --noexit "Conversion failed, see above message."
 }
 
 # openssl_load_certinfo [--type=DER | PEM] cert-file.cer
