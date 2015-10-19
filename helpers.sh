@@ -56,8 +56,9 @@ function note () {
 # --exitvalue=N uses integer N as exit value
 # -- as an argument skips further arguments, needed if a non-argument string starts with --
 function error () {
-	local NOEXIT=""
-	local EXITVALUE=1
+	# Preserve the prior command's return value
+	local _return_value=$?
+	local _return_command="exit"
 	local LABEL="ERROR:"
 	local arg
 	for arg in "$@"; do
@@ -67,23 +68,24 @@ function error () {
 				break
 				;;
 			'--noexit' )
-				NOEXIT=true
+				_return_command="return"
 				shift
+				continue
 				;;
 			'--exitvalue='* )
-				EXITVALUE=${arg#--*=}
+				_return_value=${arg#--*=}
 				shift
+				continue
 				;;
 			'--label='* )
 				LABEL=${arg#--*=}
 				shift
+				continue
 				;;
 		esac
 	done
 	output "${_TXT_ERROR}${LABEL}${_TXT_RESET} " "$@"
-	if [ -z "${NOEXIT}" ]; then
-		exit ${EXITVALUE}
-	fi
+	${_return_command} ${_return_value}
 }
 
 function warn () {
