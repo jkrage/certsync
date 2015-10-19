@@ -83,9 +83,9 @@ function test_openssl_get_certinfo_02 () {
 # Prepare the testing environment
 CMD_OPENSSL="/usr/bin/openssl"
 include "../openssl.sh"
-TEST_CERT_PEM="test_certificate.pem"
-TEST_CERT_DER="test_certificate.der"
-TEST_CERT_CER="test_certificate.cer"
+TEST_CERT_PEM="certificate_for_testing.pem"
+TEST_CERT_DER="certificate_for_testing.der"
+TEST_CERT_CER="certificate_for_testing.cer"
 TEST_CERT_SERIAL="BADBADBAD"
 TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
 TEST_CERT_NOTACERT="test_openssl.config"
