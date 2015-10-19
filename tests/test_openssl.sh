@@ -31,6 +31,10 @@ function test_wrapper () {
     fi
 }
 
+function test_openssl_test_env_ready () {
+    [ -f "${TEST_CERT_PEM}" ] && [ ! -f "${TEST_CERT_NONEXISTENT}" ]
+}
+
 function test_openssl_pem_to_der_01 () {
     return
 }
@@ -44,12 +48,15 @@ CMD_OPENSSL="/usr/bin/openssl"
 include "../openssl.sh"
 TEST_CERT_PEM="test_certificate.pem"
 TEST_CERT_DER="test_certificate.cer"
+TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
 
+test_wrapper "environment: ensure ${TEST_CERT_PEM} exists and ${TEST_CERT_NONEXISTENT} does not exist" test_openssl_test_env_ready
 test_wrapper "function test_openssl_pem_to_der()_01" test_openssl_pem_to_der_01
 
+openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
 openssl_load_certinfo "${TEST_CERT_DER}"
 cert_info_show
 openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
 openssl_load_certinfo --type=PEM "${TEST_CERT_PEM}"
 cert_info_show
-openssl_pem_to_der --warnonly --suffix=der "does-not-exist"
+openssl_pem_to_der --warnonly --suffix=der "${TEST_CERT_NONEXISTENT}"
