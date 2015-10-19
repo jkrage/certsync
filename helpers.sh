@@ -95,6 +95,7 @@ function warn () {
 			'--label='* )
 				LABEL=${arg#--*=}
 				shift
+				continue
 				;;
 		esac
 	done
@@ -108,6 +109,7 @@ function debug () {
 			'--label='* )
 				LABEL=${arg#--*=}
 				shift
+				continue
 				;;
 		esac
 	done
@@ -158,6 +160,7 @@ function include () {
 			'--nowarn' )
 				NOWARN=true
 				shift
+				continue
 				;;
 		esac
 	done
