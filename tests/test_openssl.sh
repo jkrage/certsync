@@ -36,7 +36,38 @@ function test_openssl_test_env_ready () {
 }
 
 function test_openssl_pem_to_der_01 () {
+    # Expect failure, missing input file
+    debug "Attemping to generate .der form of ${TEST_CERT_NONEXISTENT} (expecting failure)"
+    local return_value=1
+    openssl_pem_to_der --suffix=der "${TEST_CERT_NONEXISTENT}"
+    return_value=$?
+    return ${return_value}
+}
+
+function test_openssl_pem_to_der_02 () {
+    # Expect failure, bad input file
+    debug "Attemping to generate .der form of ${TEST_CERT_NOTACERT} (expecting failure)"
+    local return_value=1
+    openssl_pem_to_der --suffix=der "${TEST_CERT_NOTACERT}"
+    return_value=$?
+    return ${return_value}
+}
+
+function test_openssl_pem_to_der_03 () {
+    # Expect success, nominal path
+    debug "Generating .der form of ${TEST_CERT_PEM} (expecting ${TEST_CERT_DER})"
+    local return_value=1
     openssl_pem_to_der --suffix=der "${TEST_CERT_PEM}"
+    return_value=$?
+
+    # If conversion succeeded, ensure the expected output file exists as well
+    if [ ${return_value} == 0 ]; then
+        if [ ! -f "${TEST_CERT_DER}" ]; then
+            warn "Expected file ${TEST_CERT_DER} is missing."
+            return_value=1
+        fi
+    fi
+    return ${return_value}
 }
 
 function test_openssl_get_certinfo_01 () {
@@ -53,10 +84,15 @@ function test_openssl_get_certinfo_02 () {
 CMD_OPENSSL="/usr/bin/openssl"
 include "../openssl.sh"
 TEST_CERT_PEM="test_certificate.pem"
-TEST_CERT_DER="test_certificate.cer"
+TEST_CERT_DER="test_certificate.der"
+TEST_CERT_CER="test_certificate.cer"
+TEST_CERT_SERIAL="BADBADBAD"
 TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
+TEST_CERT_NOTACERT="test_openssl.config"
 
 test_wrapper "environment: ensure ${TEST_CERT_PEM} exists and ${TEST_CERT_NONEXISTENT} does not exist" test_openssl_test_env_ready
-test_wrapper "function test_openssl_pem_to_der()_01" test_openssl_pem_to_der_01
+test_wrapper --invert "function test_openssl_pem_to_der() 01 (missing input)" test_openssl_pem_to_der_01
+test_wrapper --invert "function test_openssl_pem_to_der() 02 (bad input)" test_openssl_pem_to_der_02
+test_wrapper "function test_openssl_pem_to_der() 03 (good input)" test_openssl_pem_to_der_03
 test_wrapper "function openssl_get_certinfo 01" test_openssl_get_certinfo_01
 test_wrapper "function openssl_get_certinfo 02" test_openssl_get_certinfo_02
