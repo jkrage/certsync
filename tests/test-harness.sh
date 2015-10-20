@@ -115,6 +115,7 @@ function test_wrapper () {
                 continue
                 ;;
             '--preserve' )
+                _TEST_PRESERVE="true"
                 OUTPUT_OPTION=""
                 shift
                 continue
@@ -128,9 +129,16 @@ function test_wrapper () {
     _test_note --label="TEST  :" "${TEST_LABEL} using ${TEST_FUNCTION}"
     _test_count_increment_tried
 
-    # Run the test, then report the results
-    ${TEST_FUNCTION}${OUTPUT_OPTION}
+    # Run the test, save the results for later reporting
+    # Use a subshell to minimize variable contamination, which then
+    # requires us to pass the return value up to this shell via the exit call
+    local TEST_OUTPUT
+    TEST_OUTPUT=$( ${TEST_FUNCTION}${OUTPUT_OPTION} ; exit $? )
     local _result=$?
+
+    if [ ! -z ${_TEST_PRESERVE} ]; then
+        output "${TEST_OUTPUT}"
+    fi
 
     # Test the results of the command
     # If _INVERT is set, invert the resulting pass/fail report
