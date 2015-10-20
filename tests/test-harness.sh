@@ -100,10 +100,17 @@ function _test_report_failure () {
 # Master wrapper function for individual testing
 function test_wrapper () {
     local _INVERT=""
-    if [ "$1" == "--invert" ]; then
-        _INVERT="true"
-        shift
-    fi
+
+    # Process function arguments
+    for arg in "$@"; do
+        case ${arg} in
+            '--invert' )
+                _INVERT="true"
+                shift
+                continue
+                ;;
+        esac
+    done
 
     local TEST_LABEL=$1
     local TEST_FUNCTION=$2
