@@ -64,8 +64,8 @@ function _test_notice () {
 
 ### Test session utilities and settings
 _LABEL_TEST="TEST  :"
-_LABEL_PASS="Passed:"
-_LABEL_FAIL="Failed:"
+_LABEL_PASS="passed:"
+_LABEL_FAIL="failed:"
 
 function _reset_test_count () {
     _TEST_COUNT=0
@@ -76,12 +76,12 @@ function _increment_test_count () {
 }
 
 function test_session_begin () {
-    _test_notice "==> BEGINNING TESTING" "$@"
+    _test_notice "==> TEST BEGIN:" "$@"
     _reset_test_count
 }
 
 function test_session_end () {
-    _test_notice "=== TESTING" "COMPLETED"
+    _test_notice "=== TEST" "COMPLETED"
     _test_notice "    with ${_TEST_COUNT} tests."
     _test_notice "<== Done."
 }
