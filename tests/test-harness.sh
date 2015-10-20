@@ -11,8 +11,8 @@ if [ ! -z "${__TEST_HARNESS_CANARY}" ]; then
 fi
 __TEST_HARNESS_CANARY=true
 
-# Override DEBUG, force debug outputs
-DEBUG=1
+# Override DEBUG if not already set, force debug outputs
+DEBUG=${DEBUG:-1}
 
 # Load the helpers.sh file
 source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
