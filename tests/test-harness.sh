@@ -14,8 +14,8 @@ __TEST_HARNESS_CANARY=true
 # Set DEBUG to on if not already set
 DEBUG=${DEBUG:-1}
 
-# Load the helpers.sh file
-source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;exit 1 ; }
+# Load the utilities.sh file
+source "$(dirname $0)/../utilities.sh" || { echo "ERROR: utilities.sh not found!" ;exit 1 ; }
 # Enforce being in the tests directory
 [[ "$(dirname $0)" == "." ]] || { echo "ERROR: Please run this script directly from the tests/ directory." ; exit 1 ; }
 
