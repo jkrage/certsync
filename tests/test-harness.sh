@@ -67,26 +67,41 @@ _LABEL_TEST="TEST  :"
 _LABEL_PASS="passed:"
 _LABEL_FAIL="failed:"
 
-function _reset_test_count () {
-    _TEST_COUNT=0
+function _test_reset_counts () {
+    _TEST_COUNT_TRIED=0
+    _TEST_COUNT_SUCCESS=0
+    _TEST_COUNT_FAILURE=0
 }
 
-function _increment_test_count () {
-    _TEST_COUNT=$((${_TEST_COUNT}+1))
+function _test_count_increment_tried () {
+    _TEST_COUNT_TRIED=$((${_TEST_COUNT_TRIED}+1))
 }
 
 function test_session_begin () {
     _test_notice "==> TEST BEGIN:" "$@"
-    _reset_test_count
+    _test_reset_counts
 }
 
 function test_session_end () {
     _test_notice "=== TEST" "COMPLETED"
-    _test_notice "    with ${_TEST_COUNT} tests."
+    output "    Count of tests tried: ${_TEST_COUNT_TRIED}"
+    output "       \--> ${_TXT_NOTE}tests passed: ${_TEST_COUNT_SUCCESS}${_TXT_RESET}"
+    output "       \--> ${_TXT_ERROR}tests failed: ${_TEST_COUNT_FAILURE}${_TXT_RESET}"
     _test_notice "<== Done."
 }
 
-### Master wrapper function for individual testing
+### Per-test functions
+function _test_report_success () {
+    _TEST_COUNT_SUCCESS=$((${_TEST_COUNT_SUCCESS}+1))
+    _note --label="${_LABEL_PASS}" "$@"
+}
+
+function _test_report_failure () {
+    _TEST_COUNT_FAILURE=$((${_TEST_COUNT_FAILURE}+1))
+    _error --noexit --label="${_LABEL_FAIL}" "$@"
+}
+
+# Master wrapper function for individual testing
 function test_wrapper () {
     local _INVERT=""
     if [ "$1" == "--invert" ]; then
@@ -100,13 +115,25 @@ function test_wrapper () {
     local OUTPUT_OPTION=""
 
     _note --label="${_LABEL_TEST}" "${TEST_LABEL} using ${TEST_FUNCTION}"
-    _increment_test_count
+    _test_count_increment_tried
     if [ ! -z "${PRESERVE_OUTPUT}" ]; then
         OUTPUT_OPTION=" >/dev/null 2>&1"
     fi
-    if [ -z "${_INVERT}" ]; then
-        ${TEST_FUNCTION}${OUTPUT_OPTION} && _note --label="${_LABEL_PASS}" "${TEST_LABEL}" || _error --noexit --label="${_LABEL_FAIL}" "${TEST_LABEL}"
+
+    # Run the test, then report the results
+    ${TEST_FUNCTION}${OUTPUT_OPTION}
+    local _result=$?
+
+    # Test the results of the command
+    # If _INVERT is set, invert the resulting pass/fail report
+    if [[ (( ${_result} -eq 0 )) && ((-z "${_INVERT}")) ]]; then
+        # report normal success: zero-value return, normal (non-inverted) result
+        _test_report_success "${TEST_LABEL}"
+    elif [[ (( ${_result} -ne 0 )) && ((! -z "${_INVERT}")) ]]; then
+        # report inverted success: non-zero return, inverted result
+        _test_report_success "${TEST_LABEL}"
     else
-        ${TEST_FUNCTION}${OUTPUT_OPTION} && _error --noexit --label="${_LABEL_FAIL}" "${TEST_LABEL}" || _note --label="${_LABEL_PASS}" "${TEST_LABEL}"
+        # report failure: non-zero return value, normal (non-inverted) result
+        _test_report_failure "${TEST_LABEL}"
     fi
 }
