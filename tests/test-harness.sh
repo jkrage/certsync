@@ -98,8 +98,13 @@ function _test_report_failure () {
 }
 
 # Master wrapper function for individual testing
+# test_wrapper [--invert] [--preserver] LABEL FUNCTION
+# Run FUNCTION and report whether it ran successfully
+# --invert treats failure as a success and vice versa
+# --preserve keeps the output of the command, does not dump to /dev/null
 function test_wrapper () {
     local _INVERT=""
+    local OUTPUT_OPTION=" >/dev/null 2>&1"
 
     # Process function arguments
     for arg in "$@"; do
@@ -109,19 +114,19 @@ function test_wrapper () {
                 shift
                 continue
                 ;;
+            '--preserve' )
+                OUTPUT_OPTION=""
+                shift
+                continue
+                ;;
         esac
     done
 
     local TEST_LABEL=$1
     local TEST_FUNCTION=$2
-    local PRESERVE_OUTPUT=$3
-    local OUTPUT_OPTION=""
 
     _test_note --label="TEST  :" "${TEST_LABEL} using ${TEST_FUNCTION}"
     _test_count_increment_tried
-    if [ ! -z "${PRESERVE_OUTPUT}" ]; then
-        OUTPUT_OPTION=" >/dev/null 2>&1"
-    fi
 
     # Run the test, then report the results
     ${TEST_FUNCTION}${OUTPUT_OPTION}
