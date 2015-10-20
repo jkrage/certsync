@@ -47,7 +47,7 @@ function note () {
 				;;
 		esac
 	done
-	output "${_TXT_NOTE}${LABEL}${_TXT_RESET} " "$@"
+	output "${_TXT_NOTE}${LABEL}${_TXT_RESET} ""$@"
 }
 
 # error [--noexit] [-exitvalue=N] [--] string ...
@@ -84,7 +84,7 @@ function error () {
 				;;
 		esac
 	done
-	output "${_TXT_ERROR}${LABEL}${_TXT_RESET} " "$@"
+	output "${_TXT_ERROR}${LABEL}${_TXT_RESET} ""$@"
 	${_return_command} ${_return_value}
 }
 
@@ -99,7 +99,7 @@ function warn () {
 				;;
 		esac
 	done
-	output "${_TXT_WARN}${LABEL}${_TXT_RESET} " "$*"
+	output "${_TXT_WARN}${LABEL}${_TXT_RESET} ""$*"
 }
 
 function debug () {
@@ -114,7 +114,7 @@ function debug () {
 		esac
 	done
 	if [[ ${DEBUG} > 0 ]]; then
-		output "${_TXT_DEBUG}${LABEL}${_TXT_RESET} " "$@"
+		output "${_TXT_DEBUG}${LABEL}${_TXT_RESET} ""$@"
 	fi
 }
 
