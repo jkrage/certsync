@@ -23,39 +23,39 @@ source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;e
 ### We'll override some helper functions to simplify output
 # cache_function_as original_function cached_function
 # Allows caching (copying) of a specified function in a new NICKNAME
-function cache_function_as () {
+function _test_cache_function_as () {
     test -n "$(declare -f $1)" || return
     eval "${_/$1/$2}"
 }
 
 # Cache the output functions
-cache_function_as debug _debug
-cache_function_as note _note
-cache_function_as warn _warn
-cache_function_as error _error
+_test_cache_function_as debug _test_debug
+_test_cache_function_as note _test_note
+_test_cache_function_as warn _test_warn
+_test_cache_function_as error _test_error
 
 # Define replacement functions for the test harness
-_INDENT="        "
+_TEST_LABEL_SPACING="        "
 function debug () {
     if [[ ${DEBUG} > 0 ]]; then
-        echo -n "${_INDENT}"
+        echo -n "${_TEST_LABEL_SPACING}"
     fi
-    _debug "$@"
+    _test_debug "$@"
 }
 
 function note () {
-    echo -n "${_INDENT}"
-    _note "$@"
+    echo -n "${_TEST_LABEL_SPACING}"
+    _test_note "$@"
 }
 
 function warn () {
-    echo -n "${_INDENT}"
-    _warn "$@"
+    echo -n "${_TEST_LABEL_SPACING}"
+    _test_warn "$@"
 }
 
 function error () {
-    echo -n "${_INDENT}"
-    _error "$@"
+    echo -n "${_TEST_LABEL_SPACING}"
+    _test_error "$@"
 }
 
 function _test_notice () {
@@ -63,10 +63,6 @@ function _test_notice () {
 }
 
 ### Test session utilities and settings
-_LABEL_TEST="TEST  :"
-_LABEL_PASS="passed:"
-_LABEL_FAIL="failed:"
-
 function _test_reset_counts () {
     _TEST_COUNT_TRIED=0
     _TEST_COUNT_SUCCESS=0
@@ -93,12 +89,12 @@ function test_session_end () {
 ### Per-test functions
 function _test_report_success () {
     _TEST_COUNT_SUCCESS=$((${_TEST_COUNT_SUCCESS}+1))
-    _note --label="${_LABEL_PASS}" "$@"
+    _test_note --label="passed:" "$@"
 }
 
 function _test_report_failure () {
     _TEST_COUNT_FAILURE=$((${_TEST_COUNT_FAILURE}+1))
-    _error --noexit --label="${_LABEL_FAIL}" "$@"
+    _test_error --noexit --label="failed:" "$@"
 }
 
 # Master wrapper function for individual testing
@@ -114,7 +110,7 @@ function test_wrapper () {
     local PRESERVE_OUTPUT=$3
     local OUTPUT_OPTION=""
 
-    _note --label="${_LABEL_TEST}" "${TEST_LABEL} using ${TEST_FUNCTION}"
+    _test_note --label="TEST  :" "${TEST_LABEL} using ${TEST_FUNCTION}"
     _test_count_increment_tried
     if [ ! -z "${PRESERVE_OUTPUT}" ]; then
         OUTPUT_OPTION=" >/dev/null 2>&1"
