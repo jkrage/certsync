@@ -24,8 +24,8 @@ source "$(dirname $0)/../helpers.sh" || { echo "ERROR: helpers.sh not found!" ;e
 # cache_function_as original_function cached_function
 # Allows caching (copying) of a specified function in a new NICKNAME
 function cache_function_as () {
-  test -n "$(declare -f $1)" || return
-  eval "${_/$1/$2}"
+    test -n "$(declare -f $1)" || return
+    eval "${_/$1/$2}"
 }
 
 # Cache the output functions
