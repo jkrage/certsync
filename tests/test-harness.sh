@@ -11,7 +11,7 @@ if [ ! -z "${__TEST_HARNESS_CANARY}" ]; then
 fi
 __TEST_HARNESS_CANARY=true
 
-# Override DEBUG if not already set, force debug outputs
+# Set DEBUG to on if not already set
 DEBUG=${DEBUG:-1}
 
 # Load the helpers.sh file
