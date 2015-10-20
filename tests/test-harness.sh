@@ -35,9 +35,11 @@ cache_function_as warn _warn
 cache_function_as error _error
 
 # Define replacement functions for the test harness
-_INDENT="    "
+_INDENT="        "
 function debug () {
-    echo -n "${_INDENT}"
+    if [[ ${DEBUG} > 0 ]]; then
+        echo -n "${_INDENT}"
+    fi
     _debug "$@"
 }
 
@@ -56,10 +58,33 @@ function error () {
     _error "$@"
 }
 
+function _test_notice () {
+    output "${_TXT_NOTE}""$@""${_TXT_RESET}"
+}
+
 ### Test session utilities and settings
-_LABEL_TEST="TESTING:"
+_LABEL_TEST="TEST  :"
 _LABEL_PASS="Passed:"
 _LABEL_FAIL="Failed:"
+
+function _reset_test_count () {
+    _TEST_COUNT=0
+}
+
+function _increment_test_count () {
+    _TEST_COUNT=$((${_TEST_COUNT}+1))
+}
+
+function test_session_begin () {
+    _test_notice "==> BEGINNING TESTING" "$@"
+    _reset_test_count
+}
+
+function test_session_end () {
+    _test_notice "=== TESTING" "COMPLETED"
+    _test_notice "    with ${_TEST_COUNT} tests."
+    _test_notice "<== Done."
+}
 
 ### Master wrapper function for individual testing
 function test_wrapper () {
@@ -75,6 +100,7 @@ function test_wrapper () {
     local OUTPUT_OPTION=""
 
     _note --label="${_LABEL_TEST}" "${TEST_LABEL} using ${TEST_FUNCTION}"
+    _increment_test_count
     if [ ! -z "${PRESERVE_OUTPUT}" ]; then
         OUTPUT_OPTION=" >/dev/null 2>&1"
     fi
