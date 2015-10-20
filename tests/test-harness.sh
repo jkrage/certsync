@@ -52,7 +52,6 @@ function warn () {
 }
 
 function error () {
-    _note --label="HELLO" "Test harness error called"
     echo -n "${_INDENT}"
     _error "$@"
 }
