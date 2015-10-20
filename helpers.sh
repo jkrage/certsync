@@ -9,7 +9,7 @@
 # Internal Variables
 #
 # DEBUG of 0 to disable debug messages, 1 to enable
-DEBUG=1
+DEBUG=${DEBUG:-0}
 
 # Find a useful tput
 CMD_TPUT=$(which tput)
