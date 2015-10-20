@@ -56,10 +56,12 @@ function error () {
     _error "$@"
 }
 
-### Master wrapper function for Testing
+### Test session utilities and settings
 _LABEL_TEST="TESTING:"
 _LABEL_PASS="Passed:"
 _LABEL_FAIL="Failed:"
+
+### Master wrapper function for individual testing
 function test_wrapper () {
     local _INVERT=""
     if [ "$1" == "--invert" ]; then
