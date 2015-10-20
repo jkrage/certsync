@@ -129,8 +129,11 @@ function test_wrapper () {
     _test_count_increment_tried
 
     # Run the test, then report the results
-    ${TEST_FUNCTION}${OUTPUT_OPTION}
+    # Use a subshell to minimize variable contamination, which then
+    # requires us to pass the return value up to this shell via the exit call
+    ( ${TEST_FUNCTION}${OUTPUT_OPTION} ;exit $?)
     local _result=$?
+    _test_debug "RV=${_result}"
 
     # Test the results of the command
     # If _INVERT is set, invert the resulting pass/fail report
