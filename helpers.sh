@@ -113,7 +113,7 @@ function debug () {
 				;;
 		esac
 	done
-	if [[ ${DEBUG} ]]; then
+	if [[ ${DEBUG} > 0 ]]; then
 		output "${_TXT_DEBUG}${LABEL}${_TXT_RESET} " "$@"
 	fi
 }
