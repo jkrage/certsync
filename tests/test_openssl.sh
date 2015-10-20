@@ -87,6 +87,7 @@ TEST_CERT_SERIAL="0BADBADBAD"
 TEST_CERT_NONEXISTENT="this-certificate-does-not-exist"
 TEST_CERT_NOTACERT="test_openssl.config"
 
+test_session_begin "OpenSSL support using a generate test certificate."
 test_wrapper "environment: ensure ${TEST_CERT_PEM} exists and ${TEST_CERT_NONEXISTENT} does not exist" test_openssl_test_env_ready
 test_wrapper --invert "function test_openssl_pem_to_der() 01 (missing input)" test_openssl_pem_to_der_01
 test_wrapper --invert "function test_openssl_pem_to_der() 02 (bad input)" test_openssl_pem_to_der_02
@@ -94,3 +95,4 @@ test_wrapper "function test_openssl_pem_to_der() 03 (good input, .cer)" test_ope
 test_wrapper "function test_openssl_pem_to_der() 03 (good input, .der)" test_openssl_pem_to_der_04
 test_wrapper "function openssl_get_certinfo 01" test_openssl_get_certinfo_01
 test_wrapper "function openssl_get_certinfo 02" test_openssl_get_certinfo_02
+test_session_end
