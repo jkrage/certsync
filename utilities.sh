@@ -90,6 +90,7 @@ function error () {
 
 function warn () {
 	local LABEL="WARN:"
+	local arg
 	for arg in "$@"; do
 		case ${arg} in
 			'--label='* )
@@ -104,6 +105,7 @@ function warn () {
 
 function debug () {
 	local LABEL="DEBUG:"
+	local arg
 	for arg in "$@"; do
 		case ${arg} in
 			'--label='* )
