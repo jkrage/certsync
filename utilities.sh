@@ -11,27 +11,29 @@
 # DEBUG of 0 to disable debug messages, 1 to enable
 DEBUG=${DEBUG:-0}
 
-# Find a useful tput
-CMD_TPUT=$(which tput)
-if [ -x "${CMD_TPUT}" ]; then
-	_TXT_RESET="$(${CMD_TPUT} sgr0)"
-	_TXT_BOLD="$(${CMD_TPUT} bold)"
-	_TXT_ERROR="${_TXT_BOLD}$(${_CMD_TPUT} setaf 1)" # Bold/Red
-	_TXT_WARN="${_TXT_BOLD}$(${_CMD_TPUT} setaf 3)" # Bold/Yellow
-	_TXT_NOTE="${_TXT_BOLD}$(${_CMD_TPUT} setaf 2)" # Bold/Green
-	_TXT_DEBUG="${_TXT_BOLD}$(${_CMD_TPUT} setaf 4)" # Bold/Cyan
-else
-	_TXT_RESET=""
-	_TXT_BOLD=""
-	_TXT_ERROR=""
-	_TXT_WARN=""
-	_TXT_NOTE=""
-	_TXT_DEBUG=""
-fi
-
 #
 # Internal Functions
 #
+function _setup_pretty_text_codes () {
+	# Find a useful tput
+	_CMD_TPUT=$(which tput)
+	if [ -x "${_CMD_TPUT}" ]; then
+		_TXT_RESET="$(${_CMD_TPUT} sgr0)"
+		_TXT_BOLD="$(${_CMD_TPUT} bold)"
+		_TXT_ERROR="${_TXT_BOLD}$(${_CMD_TPUT} setaf 1)" # Bold/Red
+		_TXT_WARN="${_TXT_BOLD}$(${_CMD_TPUT} setaf 3)" # Bold/Yellow
+		_TXT_NOTE="${_TXT_BOLD}$(${_CMD_TPUT} setaf 2)" # Bold/Green
+		_TXT_DEBUG="${_TXT_BOLD}$(${_CMD_TPUT} setaf 4)" # Bold/Cyan
+	else
+		_TXT_RESET=""
+		_TXT_BOLD=""
+		_TXT_ERROR=""
+		_TXT_WARN=""
+		_TXT_NOTE=""
+		_TXT_DEBUG=""
+	fi
+}
+
 function output () {
 	echo "$@"
 }
@@ -39,6 +41,7 @@ function output () {
 function note () {
 	local LABEL="NOTE:"
 	local arg
+	[ -z ${_CMD_TPUT:-} ] && _setup_pretty_text_codes
 	for arg in "$@"; do
 		case ${arg} in
 			'--label='* )
@@ -61,6 +64,7 @@ function error () {
 	local _return_command="exit"
 	local LABEL="ERROR:"
 	local arg
+	[ -z ${_CMD_TPUT:-} ] && _setup_pretty_text_codes
 	for arg in "$@"; do
 		case ${arg} in
 			'--' )
@@ -91,6 +95,7 @@ function error () {
 function warn () {
 	local LABEL="WARN:"
 	local arg
+	[ -z ${_CMD_TPUT:-} ] && _setup_pretty_text_codes
 	for arg in "$@"; do
 		case ${arg} in
 			'--label='* )
@@ -106,6 +111,8 @@ function warn () {
 function debug () {
 	local LABEL="DEBUG:"
 	local arg
+	[ -z ${_CMD_TPUT:-} ] && _setup_pretty_text_codes
+	[ -z ${DEBUG:-} ] && DEBUG=0
 	for arg in "$@"; do
 		case ${arg} in
 			'--label='* )
