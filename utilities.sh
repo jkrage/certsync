@@ -16,10 +16,10 @@ CMD_TPUT=$(which tput)
 if [ -x "${CMD_TPUT}" ]; then
 	_TXT_RESET="$(${CMD_TPUT} sgr0)"
 	_TXT_BOLD="$(${CMD_TPUT} bold)"
-	_TXT_ERROR="${_TXT_BOLD}$(${CMD_TPUT} setaf 1)"
-	_TXT_WARN="${_TXT_BOLD}$(${CMD_TPUT} setaf 3)"
-	_TXT_NOTE="${_TXT_BOLD}$(${CMD_TPUT} setaf 2)"
-	_TXT_DEBUG="${_TXT_BOLD}$(${CMD_TPUT} setaf 4)"
+	_TXT_ERROR="${_TXT_BOLD}$(${_CMD_TPUT} setaf 1)" # Bold/Red
+	_TXT_WARN="${_TXT_BOLD}$(${_CMD_TPUT} setaf 3)" # Bold/Yellow
+	_TXT_NOTE="${_TXT_BOLD}$(${_CMD_TPUT} setaf 2)" # Bold/Green
+	_TXT_DEBUG="${_TXT_BOLD}$(${_CMD_TPUT} setaf 4)" # Bold/Cyan
 else
 	_TXT_RESET=""
 	_TXT_BOLD=""
